@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class CteniCSV {
@@ -22,17 +23,23 @@ public class CteniCSV {
         return data;
     }
 
-    public static void odebraniCizichZemi(List<String[]> data, int index) throws IOException {
-        if (index < 0 || index > data.size()) {
-            throw new IOException("Hodnota nemuze byt mimo csv") {
-            };
-        }
+    public static void odebraniCizichZemi(List<String[]> data) {
+        Iterator<String[]> iterator = data.iterator();
 
-        String[] radek = data.get(index);
-        if (radek[12].contains("CZ") && radek[12].contains("SK")){
-            System.out.println(radek);
-        } else {
-            data.remove(radek);
+        while (iterator.hasNext()) {
+            String[] radek = iterator.next();
+            boolean obsahujeCZorSK = false;
+
+            for (String hodnota : radek) {
+                if (hodnota.contains("CZ") || hodnota.contains("SK")) {
+                    obsahujeCZorSK = true;
+                    break;
+                }
+            }
+
+            if (!obsahujeCZorSK) {
+                iterator.remove();
+            }
         }
     }
 }
